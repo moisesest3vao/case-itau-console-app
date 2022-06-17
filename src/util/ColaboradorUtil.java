@@ -19,29 +19,12 @@ public class ColaboradorUtil {
     }
 
     public String criaIdentificador(String[] nomes){
-        String parte1 = null;
-        String parte2 = null;
 
-        if(nomes[0].length() >=4){
-            parte1 = nomes[0].substring(0,4);
-            if(nomes[1].length() >= 3){
-                parte2 = nomes[1].substring(0,3);
-            }
-        }
+        String login = this.montaLogin(nomes);
 
-        String login = parte1+parte2;
 
-        if(this.verificaRepeticao(login)){
-            if(nomes[1].length() >=4){
-                parte1 = nomes[1].substring(0,4);
-                if(nomes[0].length() >= 3){
-                    parte2 = nomes[0].substring(0,3);
-                }
-            }
-        }
-
-        historicoLogins.add(parte1+parte2);
-        return parte1+parte2;
+        historicoLogins.add(login);
+        return login;
     }
 
     private boolean verificaRepeticao(String identificador) {
@@ -54,7 +37,26 @@ public class ColaboradorUtil {
         return nome.toUpperCase().replaceAll(expressaoRegular, "$1 $5");
     }
 
-    private String montaLogin(){
+    private String montaLogin(String[] nomes){
+        String parte1 = null;
+        String parte2 = null;
 
+        if(nomes[0].length() >=4){
+            parte1 = nomes[0].substring(0,4);
+            if(nomes[1].length() >= 3){
+                parte2 = nomes[1].substring(0,3);
+            }
+        }
+
+        if(this.verificaRepeticao(parte1+parte2)){
+            if(nomes[1].length() >=4){
+                parte1 = nomes[1].substring(0,4);
+                if(nomes[0].length() >= 3){
+                    parte2 = nomes[0].substring(0,3);
+                }
+            }
+        }
+
+        return parte1+parte2;
     }
 }
