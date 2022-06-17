@@ -1,31 +1,30 @@
 package service;
 
+import model.Colaborador;
 import util.ColaboradorUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeradorService {
 
     public void comecar(){
-        Set<String> colaboradores = this.getColaboradores();
-        this.gerarLogins(colaboradores);
+        List<String> nomes = this.getColaboradores();
+        List<Colaborador> colaboradores = this.gerarLogins(nomes);
 
+        colaboradores.forEach(System.out::println);
     }
 
-    private void gerarLogins(Set<String> colaboradores) {
+    private List<Colaborador> gerarLogins(List<String> nomes) {
         ColaboradorUtil colaboradorUtil = new ColaboradorUtil();
-
-        colaboradores.forEach(colaborador -> {
-            colaboradorUtil.criarLogin(colaborador);
-        });
+        return nomes.stream().map(colaboradorUtil::criarLogin).toList();
     }
 
-    private Set<String> getColaboradores() {
-        Set<String> nomes = new HashSet<String>();
+    private List<String> getColaboradores() {
+        List<String> nomes = new ArrayList<>();
         String path = "src/repository/Massa de Dados.txt";
 
         File massaDeDados = new File(path);

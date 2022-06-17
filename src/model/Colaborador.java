@@ -4,6 +4,11 @@ public class Colaborador {
     private String login;
     private String nome;
 
+    public Colaborador(String nome, String login) {
+        this.login = login;
+        this.nome = nome;
+    }
+
     public String getId() {
         return login;
     }
@@ -18,5 +23,10 @@ public class Colaborador {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    @Override
+    public String toString() {
+        return "Nome: "+nome+"\nLogin: "+login;
     }
 }
