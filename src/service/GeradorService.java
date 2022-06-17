@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GeradorService {
 
-    public void comecar(){
+    public void cadastrarColaboradores(){
         List<String> nomes = this.getColaboradores();
         List<Colaborador> colaboradores = this.gerarLogins(nomes);
 
@@ -26,7 +26,6 @@ public class GeradorService {
     private List<String> getColaboradores() {
         List<String> nomes = new ArrayList<>();
         String path = "src/repository/Massa de Dados.txt";
-
         File massaDeDados = new File(path);
 
         if(massaDeDados.exists()){
@@ -43,8 +42,10 @@ public class GeradorService {
                 }
             }catch (Exception e){
                 System.out.println("Houve um problema durante a leitura do arquivo");
+                e.printStackTrace();
             }
         }
+        System.out.println("Arquivo não encontrado no caminho especificado");
         return null;
     }
 }
