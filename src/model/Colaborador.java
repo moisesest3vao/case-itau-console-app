@@ -27,6 +27,6 @@ public class Colaborador {
 
     @Override
     public String toString() {
-        return "Nome: "+nome+"\nLogin: "+login;
+        return "==============\nNome: "+nome+"\nLogin: "+login+"\n==============";
     }
 }

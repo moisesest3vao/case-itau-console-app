@@ -13,12 +13,12 @@ public class GeradorService {
 
     public void cadastrarColaboradores(){
         List<String> nomes = this.getColaboradores();
-        List<Colaborador> colaboradores = this.gerarLogins(nomes);
+        List<Colaborador> colaboradores = this.cadastrar(nomes);
 
         colaboradores.forEach(System.out::println);
     }
 
-    private List<Colaborador> gerarLogins(List<String> nomes) {
+    private List<Colaborador> cadastrar(List<String> nomes) {
         ColaboradorUtil colaboradorUtil = new ColaboradorUtil();
         return nomes.stream().map(colaboradorUtil::criarLogin).toList();
     }
