@@ -63,12 +63,15 @@ public class ColaboradorUtil {
 
     private boolean verificaRepeticaoOuIgualdade(String parte1, String parte2) {
         String identificador = parte1+parte2;
+        String comparacao = parte1 != null && parte1.length() >= 3 ? parte1.substring(0, 3) : "";
+
         /*
         System.out.println(parte1.substring(0,3));
         System.out.println(parte2);
         */
+
         return historicoLogins.stream().anyMatch( login -> {
-            return Objects.equals(login, identificador) || parte1.substring(0,3).equals(parte2);
+            return Objects.equals(login, identificador) || comparacao.equals(parte2);
         });
     }
 }
