@@ -1,51 +1,61 @@
 package service;
 
 import model.Colaborador;
+import repository.CadastroRepository;
 import util.ColaboradorUtil;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GeradorService {
+    CadastroRepository cadastroRepository;
 
-    public void cadastrarColaboradores(){
-        List<String> nomes = this.getColaboradores();
-        List<Colaborador> colaboradores = this.cadastrar(nomes);
+    public List<Colaborador> cadastrarColaboradores() {
+        this.cadastroRepository = new CadastroRepository();
 
-        colaboradores.forEach(System.out::println);
+        List<String> nomesDosColaboradores = this.cadastroRepository.getAll();
+        List<Colaborador> colaboradores = nomesDosColaboradores.stream().map(this::gerarLogin).toList();
+
+        return colaboradores;
     }
 
-    private List<Colaborador> cadastrar(List<String> nomes) {
-        ColaboradorUtil colaboradorUtil = new ColaboradorUtil();
-        return nomes.stream().map(colaboradorUtil::criarLogin).toList();
+    public Colaborador gerarLogin(String nomeCompleto) {
+        String nomeSemElementos = ColaboradorUtil.removeElementosDeLigacao(nomeCompleto);
+        String[] nomeESobrenomes = nomeSemElementos.split(" ");
+        String login = this.montaLogin(nomeESobrenomes);
+
+        return new Colaborador(nomeCompleto, login);
     }
 
-    private List<String> getColaboradores() {
-        List<String> nomes = new ArrayList<>();
-        String path = "src/repository/Massa de Dados.txt";
-        File massaDeDados = new File(path);
+    private String montaLogin(String[] nomeESobrenomes) {
+        String parte1 = null;
+        String parte2 = null;
 
-        if(massaDeDados.exists()){
-            try {
-                FileReader fileReader = new FileReader(massaDeDados);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
+        boolean validaLogin = false;
+        int quantidadeDeNomes = nomeESobrenomes.length;
+        int contador = 0;
 
-                while(true){
-                    String nome = bufferedReader.readLine();
-                    if(nome == null){
-                        return nomes;
-                    }
-                    nomes.add(nome);
-                }
-            }catch (Exception e){
-                System.out.println("Houve um problema durante a leitura do arquivo");
-                e.printStackTrace();
+        while (!validaLogin) {
+            if (contador > 9999) {
+                throw new RuntimeException("Não é possível gerar um usuário dinamicamente com este nome");
             }
+
+            Random random = new Random();
+            int indexNome1 = random.nextInt(((quantidadeDeNomes - 1)) + 1);
+            int indexNome2 = random.nextInt(((quantidadeDeNomes - 1)) + 1);
+
+            parte1 = nomeESobrenomes[indexNome1].length() >= 4 ? nomeESobrenomes[indexNome1].substring(0, 4) : null;
+            parte2 = nomeESobrenomes[indexNome2].length() >= 3 ? nomeESobrenomes[indexNome2].substring(0, 3) : null;
+
+            validaLogin = ColaboradorUtil.validaLogin(parte1, parte2);
+
+            contador++;
         }
-        System.out.println("Arquivo não encontrado no caminho especificado");
-        return null;
+
+        String login = parte1+parte2;
+
+        ColaboradorUtil.historicoLogins.add(login);
+        return login;
     }
+
 }
